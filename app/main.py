@@ -6,6 +6,7 @@ from app.models import ProxyRequest, Message
 from app.inspector import inspect
 from app.proxy import forward
 from typing import List
+from app.logger import log_request
 
 app = FastAPI(title="AI Shield Firewall", version="0.1.0")
 
@@ -29,6 +30,13 @@ async def chat(request: ProxyRequest):
 
     # Step 1: Inspect
     result = inspect(request.messages)
+    # Log mọi request
+    log_request(
+        action=result.action,
+        reason=result.reason,
+        org_id=request.org_id,
+        original_text=request.messages[-1].content if request.messages else None,
+    )
     shield_info = {
         "action": result.action,
         "reason": result.reason,
