@@ -4,6 +4,7 @@ from presidio_analyzer import AnalyzerEngine
 from presidio_anonymizer import AnonymizerEngine
 
 from app.models import Message, InspectionResult
+from app.injection_detector import detect_injection, InjectionResult
 
 # Khởi tạo 1 lần khi server start (nặng, không khởi tạo mỗi request)
 analyzer = AnalyzerEngine()
@@ -68,6 +69,15 @@ def inspect(messages: List[Message]) -> InspectionResult:
         # Lớp 2: Presidio
         presidio_hits = _presidio_scan(text)
         all_findings.extend(presidio_hits)
+
+        # Lớp 3: Prompt Injection
+        injection = detect_injection(text)
+        if injection.detected:
+            all_findings.append({
+                "type": "PROMPT_INJECTION",
+                "score": injection.score,
+                "patterns": injection.patterns_hit
+            })
 
     if not all_findings:
         return InspectionResult(action="ALLOW")
