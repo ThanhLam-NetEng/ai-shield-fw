@@ -19,10 +19,11 @@ PATTERNS = {
         r"(?i)\bDAN\b.{0,20}(mode|prompt|jailbreak)",
     ],
     "system_leak": [
-        r"(?i)(reveal|show|print|output|display|repeat|tell me).{0,30}(system prompt|initial prompt|instruction|confidential)",
-        r"(?i)what (is|are|were) (your|the) (system|original|initial|hidden) (prompt|instruction)",
-        r"(?i)(leak|expose|dump).{0,20}(prompt|instruction|config|secret)",
-    ],
+    r"(?i)(reveal|show|print|output|display|repeat|tell me).{0,30}(system prompt|initial prompt|instruction|confidential)",
+    r"(?i)what (is|are|were) (your|the).{0,40}(system|original|initial|hidden).{0,20}(prompt|instruction)",
+    r"(?i)(leak|expose|dump).{0,20}(prompt|instruction|config|secret)",
+    r"(?i)(system|initial|original|hidden) prompt",
+],
     "override_attempt": [
         r"(?i)(new|updated|override|replace).{0,20}(instruction|rule|guideline|policy|prompt)",
         r"(?i)from now on (you|ignore|forget|always|never)",

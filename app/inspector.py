@@ -82,22 +82,24 @@ def inspect(messages: List[Message]) -> InspectionResult:
     if not all_findings:
         return InspectionResult(action="ALLOW")
 
-    # Nếu có BLOCK_TYPES → block hẳn
     found_types = {f["type"] for f in all_findings}
-    if found_types & BLOCK_TYPES:
-        blocked = found_types & BLOCK_TYPES
+
+    # Tất cả các type này đều BLOCK
+    BLOCK_TYPES_ALL = {"API_KEY", "JWT", "PASSWORD", "PROMPT_INJECTION"}
+
+    if found_types & BLOCK_TYPES_ALL:
+        blocked = found_types & BLOCK_TYPES_ALL
         return InspectionResult(
             action="BLOCK",
             reason=f"Sensitive data detected: {', '.join(blocked)}"
         )
 
-    # Còn lại → redact rồi cho qua
+    # Còn lại → REDACT
     modified = []
     for msg in messages:
         new_content = _redact_text(msg.content)
-        # Regex redact thêm (Presidio không cover regex patterns)
         for name, pattern in REGEX_PATTERNS.items():
-            if name not in BLOCK_TYPES:
+            if name not in BLOCK_TYPES_ALL:
                 new_content = re.sub(pattern, f"[{name}_REDACTED]", new_content)
         modified.append(Message(role=msg.role, content=new_content))
 
