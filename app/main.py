@@ -34,6 +34,17 @@ async def inspect_only(messages: List[Message]):
         "modified_messages": [m.model_dump() for m in result.modified_messages] if result.modified_messages else None
     }
 
+@app.post("/v1/inspect-output")
+async def inspect_output_only(payload: dict):
+    """Test output inspector độc lập."""
+    text = payload.get("text", "")
+    result = inspect_output(text)
+    return {
+        "safe": result.safe,
+        "reason": result.reason,
+        "filtered_text": result.filtered_text
+    }
+
 @app.post("/v1/chat")
 async def chat(request: ProxyRequest):
     start = time.time()
@@ -99,5 +110,5 @@ async def chat(request: ProxyRequest):
                 response["candidates"][0]["content"]["parts"][0]["text"] = output_check.filtered_text
     except Exception:
         pass  # Không để output inspection crash server
-    
+
     return {"shield": shield_info, "response": response}
