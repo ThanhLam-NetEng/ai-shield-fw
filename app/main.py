@@ -7,6 +7,7 @@ from app.inspector import inspect
 from app.proxy import forward
 from typing import List
 from app.logger import log_request
+from app.output_inspector import inspect_output
 
 app = FastAPI(title="AI Shield Firewall", version="0.1.0")
 
@@ -76,4 +77,27 @@ async def chat(request: ProxyRequest):
         )
 
     shield_info["latency_ms"] = round((time.time() - start) * 1000, 2)
+
+    # Output inspection
+    try:
+        # Lấy text response từ OpenAI hoặc Gemini
+        if request.provider == "openai":
+            ai_text = response["choices"][0]["message"]["content"]
+        elif request.provider == "gemini":
+            ai_text = response["candidates"][0]["content"]["parts"][0]["text"]
+        else:
+            ai_text = ""
+
+        output_check = inspect_output(ai_text)
+        shield_info["output_safe"] = output_check.safe
+
+        if not output_check.safe:
+            shield_info["output_reason"] = output_check.reason
+            if request.provider == "openai":
+                response["choices"][0]["message"]["content"] = output_check.filtered_text
+            elif request.provider == "gemini":
+                response["candidates"][0]["content"]["parts"][0]["text"] = output_check.filtered_text
+    except Exception:
+        pass  # Không để output inspection crash server
+    
     return {"shield": shield_info, "response": response}
