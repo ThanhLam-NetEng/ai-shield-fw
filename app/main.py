@@ -18,6 +18,15 @@ async def health():
 async def inspect_only(messages: List[Message]):
     """Test inspector mà không cần forward đến AI provider."""
     result = inspect(messages)
+
+    # Log request
+    log_request(
+        action=result.action,
+        reason=result.reason,
+        org_id="default",
+        original_text=messages[-1].content if messages else None,
+    )
+
     return {
         "action": result.action,
         "reason": result.reason,
