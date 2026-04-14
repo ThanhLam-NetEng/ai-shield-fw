@@ -5,6 +5,7 @@ from presidio_anonymizer import AnonymizerEngine
 
 from app.models import Message, InspectionResult
 from app.injection_detector import detect_injection, InjectionResult
+from app.policy_engine import check_policy
 
 # Khởi tạo 1 lần khi server start (nặng, không khởi tạo mỗi request)
 analyzer = AnalyzerEngine()
@@ -56,7 +57,7 @@ def _redact_text(text: str) -> str:
     anonymized = anonymizer.anonymize(text=text, analyzer_results=results)
     return anonymized.text
 
-def inspect(messages: List[Message]) -> InspectionResult:
+def inspect(messages: List[Message], org_id: str = "default") -> InspectionResult:
     all_findings = []
 
     for msg in messages:
@@ -78,6 +79,14 @@ def inspect(messages: List[Message]) -> InspectionResult:
                 "score": injection.score,
                 "patterns": injection.patterns_hit
             })
+        
+        # Lớp 4: Policy Engine
+        policy_check = check_policy(text, org_id=org_id)
+        if not policy_check.passed:
+            all_findings.append({
+                "type": "POLICY_VIOLATION",
+                "reason": policy_check.reason
+            })
 
     if not all_findings:
         return InspectionResult(action="ALLOW")
@@ -85,7 +94,7 @@ def inspect(messages: List[Message]) -> InspectionResult:
     found_types = {f["type"] for f in all_findings}
 
     # Tất cả các type này đều BLOCK
-    BLOCK_TYPES_ALL = {"API_KEY", "JWT", "PASSWORD", "PROMPT_INJECTION"}
+    BLOCK_TYPES_ALL = {"API_KEY", "JWT", "PASSWORD", "PROMPT_INJECTION", "POLICY_VIOLATION"}
 
     if found_types & BLOCK_TYPES_ALL:
         blocked = found_types & BLOCK_TYPES_ALL

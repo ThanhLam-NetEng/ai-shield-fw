@@ -17,7 +17,7 @@ async def health():
 @app.post("/v1/inspect")
 async def inspect_only(messages: List[Message]):
     """Test inspector mà không cần forward đến AI provider."""
-    result = inspect(messages)
+    result = inspect(messages, org_id="default")
 
     # Log request
     log_request(
@@ -38,7 +38,7 @@ async def chat(request: ProxyRequest):
     start = time.time()
 
     # Step 1: Inspect
-    result = inspect(request.messages)
+    result = inspect(request.messages, org_id=request.org_id)
     # Log mọi request
     log_request(
         action=result.action,
