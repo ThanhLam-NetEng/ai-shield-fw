@@ -15,7 +15,7 @@ anonymizer = AnonymizerEngine()
 REGEX_PATTERNS = {
     "VN_PHONE": r"\b(0|\+84)(3[2-9]|5[6-9]|7[0-9]|8[0-9]|9[0-9])\d{7}\b",
     "VN_CCCD":  r"\b\d{12}\b",
-    "API_KEY":  r"\b(sk-[a-zA-Z0-9]{20,}|AIza[0-9A-Za-z\-_]{35})\b",
+    "API_KEY": r"\b(sk-[a-zA-Z0-9]{20,}|AIza[0-9A-Za-z\-_]{30,})\b",
     "JWT":      r"\beyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\b",
     "PASSWORD": r"(?i)(password|passwd|pwd|secret|token)\s*[:=]\s*\S+",
     "VN_BANK_ACCOUNT": r"\b\d{9,14}\b(?=.{0,20}(ngân hàng|tài khoản|bank|tk))",
