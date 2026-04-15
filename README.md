@@ -12,23 +12,26 @@ Doanh nghiệp ngày càng tích hợp AI vào ứng dụng nội bộ — chatb
 
 ## Architecture
 
+```
 API Gateway (AWS)
-│
-▼
+      │
+      ▼
 Inspection Engine (EC2 + Docker)
-├── Layer 1: Regex — API key, JWT, SĐT, CCCD
-├── Layer 2: Presidio NLP — Email, Phone
-├── Layer 3: Prompt Injection Detector (EN + VI)
-└── Layer 4: Policy Engine — per-org rules (DynamoDB)
-│
-├── BLOCK → 403 + audit log
-├── REDACT → mask PII → forward
-└── ALLOW → forward to AI provider
-│
-Output Inspection
-│
-Response to client
+  ├── Layer 1: Regex — API key, JWT, SĐT, CCCD
+  ├── Layer 2: Presidio NLP — Email, Phone
+  ├── Layer 3: Prompt Injection Detector (EN + VI)
+  └── Layer 4: Policy Engine — per-org rules (DynamoDB)
+      │
+      ├── BLOCK  → 403 + audit log
+      ├── REDACT → mask PII → forward
+      └── ALLOW  → forward to AI provider
+                        │
+                   Output Inspection
+                        │
+                   Response to client
+
 DynamoDB: audit logs + per-org policies
+```
 
 ## Detection Capabilities
 
