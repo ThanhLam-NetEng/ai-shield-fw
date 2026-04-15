@@ -44,7 +44,7 @@ def _presidio_scan(text: str) -> List[dict]:
     """Quét text bằng Presidio NLP."""
     results = analyzer.analyze(
         text=text,
-        entities=["EMAIL_ADDRESS", "PERSON", "PHONE_NUMBER"],
+        entities=["EMAIL_ADDRESS", "PHONE_NUMBER"],
         language="en"
     )
     findings = []
@@ -60,7 +60,7 @@ def _redact_text(text: str) -> str:
     """Mask PII trong text bằng Presidio."""
     results = analyzer.analyze(
         text=text,
-        entities=["EMAIL_ADDRESS", "PERSON", "PHONE_NUMBER"],
+        entities=["EMAIL_ADDRESS", "PHONE_NUMBER"],
         language="en"
     )
     if not results:

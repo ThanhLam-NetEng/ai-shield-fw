@@ -119,19 +119,3 @@ async def reload_policy():
     """Reload policy cache từ DynamoDB."""
     invalidate_cache()
     return {"status": "policy cache cleared"}
-
-@app.post("/v1/debug-presidio")
-async def debug_presidio(payload: dict):
-    from presidio_analyzer import AnalyzerEngine
-    analyzer = AnalyzerEngine()
-    text = payload.get("text", "")
-    results = analyzer.analyze(text=text, entities=["PERSON"], language="en")
-    return [
-        {
-            "text": text[r.start:r.end],
-            "score": r.score,
-            "start": r.start,
-            "end": r.end
-        }
-        for r in results
-    ]
