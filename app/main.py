@@ -10,6 +10,9 @@ from app.logger import log_request
 from app.output_inspector import inspect_output
 from app.policy_engine import invalidate_cache
 
+from app.auth import verify_api_key
+from fastapi import Depends
+
 app = FastAPI(title="AI Shield Firewall", version="0.1.0")
 
 @app.get("/health")
@@ -17,7 +20,7 @@ async def health():
     return {"status": "ok", "version": "0.1.0"}
 
 @app.post("/v1/inspect")
-async def inspect_only(messages: List[Message]):
+async def inspect_only(messages: List[Message], api_key: str = Depends(verify_api_key)):
     """Test inspector mà không cần forward đến AI provider."""
     result = inspect(messages, org_id="default")
 
@@ -36,7 +39,7 @@ async def inspect_only(messages: List[Message]):
     }
 
 @app.post("/v1/inspect-output")
-async def inspect_output_only(payload: dict):
+async def inspect_output_only(payload: dict, api_key: str = Depends(verify_api_key)):
     """Test output inspector độc lập."""
     text = payload.get("text", "")
     result = inspect_output(text)
@@ -47,7 +50,7 @@ async def inspect_output_only(payload: dict):
     }
 
 @app.post("/v1/chat")
-async def chat(request: ProxyRequest):
+async def chat(request: ProxyRequest, api_key: str = Depends(verify_api_key)):
     start = time.time()
 
     # Step 1: Inspect
@@ -115,7 +118,7 @@ async def chat(request: ProxyRequest):
     return {"shield": shield_info, "response": response}
 
 @app.post("/v1/admin/reload-policy")
-async def reload_policy():
+async def reload_policy(api_key: str = Depends(verify_api_key)):
     """Reload policy cache từ DynamoDB."""
     invalidate_cache()
     return {"status": "policy cache cleared"}
