@@ -44,7 +44,7 @@ def _presidio_scan(text: str) -> List[dict]:
     )
     findings = []
     for r in results:
-        if r.score >= 0.7:  # chỉ lấy confidence cao
+        if r.score >= 0.:  # chỉ lấy confidence cao
             findings.append({"type": r.entity_type, "score": round(r.score, 2)})
     return findings
 

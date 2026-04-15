@@ -19,11 +19,11 @@ PATTERNS = {
         r"(?i)\bDAN\b.{0,20}(mode|prompt|jailbreak)",
     ],
     "system_leak": [
-    r"(?i)(reveal|show|print|output|display|repeat|tell me).{0,30}(system prompt|initial prompt|instruction|confidential)",
-    r"(?i)what (is|are|were) (your|the).{0,40}(system|original|initial|hidden).{0,20}(prompt|instruction)",
-    r"(?i)(leak|expose|dump).{0,20}(prompt|instruction|config|secret)",
-    r"(?i)(system|initial|original|hidden) prompt",
-],
+        r"(?i)(reveal|show|print|output|display|repeat|tell me).{0,30}(system prompt|initial prompt|instruction|confidential)",
+        r"(?i)what (is|are|were) (your|the).{0,40}(system|original|initial|hidden).{0,20}(prompt|instruction)",
+        r"(?i)(leak|expose|dump).{0,20}(prompt|instruction|config|secret)",
+        r"(?i)(system|initial|original|hidden) prompt",
+    ],
     "override_attempt": [
         r"(?i)(new|updated|override|replace).{0,20}(instruction|rule|guideline|policy|prompt)",
         r"(?i)from now on (you|ignore|forget|always|never)",
@@ -38,10 +38,11 @@ PATTERNS = {
         r"(?i)maintenance (mode|override|access)",
     ],
     "role_switch_vi": [
-        r"(bỏ qua|hãy quên|quên đi).{0,40}(hướng dẫn|lệnh|quy tắc|giới hạn)",
-        r"bây giờ (bạn là|bạn sẽ là|hãy là|em là)",
-        r"giả vờ (bạn là|như là|rằng bạn|đây là)",
+        r"bây giờ bạn (là|sẽ là|hãy là)",
+        r"bạn (là|sẽ là) một AI (không có|vô|không bị) (giới hạn|hạn chế|ràng buộc)",
         r"(đóng vai|vào vai|hóa thân).{0,20}(AI|trí tuệ|robot|máy)",
+        r"(bỏ qua|hãy quên|quên đi).{0,40}(hướng dẫn|lệnh|quy tắc|giới hạn)",
+        r"giả vờ (bạn là|như là|rằng bạn)",
     ],
     "system_leak_vi": [
         r"(tiết lộ|cho tôi biết|hiển thị|đọc).{0,30}(system prompt|hướng dẫn hệ thống|lệnh hệ thống)",
