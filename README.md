@@ -60,6 +60,16 @@ Tested on 23-sample dataset (BLOCK / REDACT / ALLOW cases, EN + VI):
 
 \*Network latency VN → AWS us-east-1. Proxy overhead < 15ms when co-located.
 
+## Dashboard
+
+Live monitoring dashboard tại `/dashboard` — hiển thị real-time stats từ DynamoDB audit logs (auto-refresh mỗi 30 giây):
+
+- Total requests, block rate, redact rate
+- Top violation types (bar chart)
+- Recent activity table (last 20 requests) với timestamp, action, org, reason, preview
+
+![Dashboard](Screenshot/placeholder.PNG)
+
 ## Tech Stack
 
 - **Runtime**: Python 3.11, FastAPI, uvicorn
