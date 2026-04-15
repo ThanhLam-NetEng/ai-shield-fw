@@ -23,6 +23,11 @@ REGEX_PATTERNS = {
     "VN_SALARY":       r"(?i)(lương|thu nhập|mức lương|salary).{0,20}\d+.{0,10}(triệu|nghìn|đồng|vnđ|vnd)",
 }
 
+VI_LOCATION_WHITELIST = {
+    "hà nội", "hồ chí minh", "đà nẵng", "hải phòng", "cần thơ",
+    "huế", "nha trang", "vũng tàu", "đà lạt", "bình dương"
+}
+
 # Loại nào thì BLOCK hẳn (không redact)
 BLOCK_TYPES = {"API_KEY", "JWT", "PASSWORD"}
 
@@ -44,7 +49,10 @@ def _presidio_scan(text: str) -> List[dict]:
     )
     findings = []
     for r in results:
-        if r.score >= 0.:  # chỉ lấy confidence cao
+        if r.score >= 0.85:  # chỉ lấy confidence cao
+            detected_text = text[r.start:r.end].lower()
+            if detected_text in VI_LOCATION_WHITELIST:
+                continue
             findings.append({"type": r.entity_type, "score": round(r.score, 2)})
     return findings
 

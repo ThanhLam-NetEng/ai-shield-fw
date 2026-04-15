@@ -63,12 +63,13 @@ GROUP_WEIGHTS = {
 }
 
 def detect_injection(text: str) -> InjectionResult:
+    text_lower = text.lower()
     score = 0.0
     patterns_hit = []
 
     for group_name, patterns in PATTERNS.items():
         for pattern in patterns:
-            if re.search(pattern, text):
+            if re.search(pattern, text_lower):
                 score += GROUP_WEIGHTS[group_name]
                 patterns_hit.append(group_name)
                 break  # mỗi group chỉ tính 1 lần dù match nhiều pattern
