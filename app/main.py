@@ -8,6 +8,7 @@ from app.proxy import forward
 from typing import List
 from app.logger import log_request
 from app.output_inspector import inspect_output
+from app.policy_engine import invalidate_cache
 
 app = FastAPI(title="AI Shield Firewall", version="0.1.0")
 
@@ -112,3 +113,9 @@ async def chat(request: ProxyRequest):
         pass  # Không để output inspection crash server
 
     return {"shield": shield_info, "response": response}
+
+@app.post("/v1/admin/reload-policy")
+async def reload_policy():
+    """Reload policy cache từ DynamoDB."""
+    invalidate_cache()
+    return {"status": "policy cache cleared"}

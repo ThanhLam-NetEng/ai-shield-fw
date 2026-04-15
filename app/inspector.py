@@ -18,6 +18,9 @@ REGEX_PATTERNS = {
     "API_KEY":  r"\b(sk-[a-zA-Z0-9]{20,}|AIza[0-9A-Za-z\-_]{35})\b",
     "JWT":      r"\beyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\b",
     "PASSWORD": r"(?i)(password|passwd|pwd|secret|token)\s*[:=]\s*\S+",
+    "VN_BANK_ACCOUNT": r"\b\d{9,14}\b(?=.{0,20}(ngân hàng|tài khoản|bank|tk))",
+    "VN_TAX_CODE":     r"\b\d{10}(-\d{3})?\b(?=.{0,20}(mã số thuế|MST|tax))",
+    "VN_SALARY":       r"(?i)(lương|thu nhập|mức lương|salary).{0,20}\d+.{0,10}(triệu|nghìn|đồng|vnđ|vnd)",
 }
 
 # Loại nào thì BLOCK hẳn (không redact)

@@ -37,6 +37,17 @@ PATTERNS = {
         r"(?i)(admin|developer|sudo|root|god|master|owner).{0,20}(mode|access|privilege|override|unlock)",
         r"(?i)maintenance (mode|override|access)",
     ],
+    "role_switch_vi": [
+        r"(bỏ qua|hãy quên|quên đi).{0,40}(hướng dẫn|lệnh|quy tắc|giới hạn)",
+        r"bây giờ (bạn là|bạn sẽ là|hãy là|em là)",
+        r"giả vờ (bạn là|như là|rằng bạn|đây là)",
+        r"(đóng vai|vào vai|hóa thân).{0,20}(AI|trí tuệ|robot|máy)",
+    ],
+    "system_leak_vi": [
+        r"(tiết lộ|cho tôi biết|hiển thị|đọc).{0,30}(system prompt|hướng dẫn hệ thống|lệnh hệ thống)",
+        r"(system prompt|prompt gốc|câu lệnh gốc) (của bạn|là gì)",
+        r"bạn (được|bị) (lập trình|cài đặt|hướng dẫn) (như thế nào|để làm gì)",
+    ],
 }
 
 # Weight của từng group (group nguy hiểm hơn = weight cao hơn)
@@ -46,6 +57,8 @@ GROUP_WEIGHTS = {
     "override_attempt":      0.30,
     "encoding_trick":        0.25,
     "privilege_escalation":  0.30,
+    "role_switch_vi":    0.40,
+    "system_leak_vi":    0.35,
 }
 
 def detect_injection(text: str) -> InjectionResult:
