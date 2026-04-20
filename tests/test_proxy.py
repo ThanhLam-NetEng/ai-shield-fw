@@ -97,3 +97,20 @@ def test_injection_score_low():
     result = detect_injection("Can you help me write a Python function?")
     assert result.detected is False
     assert result.score == 0.0
+
+# -------- VI Custom Recognizer --------
+def test_redact_cccd():
+    result = inspect(make_msg("CCCD của tôi là 012345678901 xin xác nhận"))
+    assert result.action == "REDACT"
+
+def test_redact_tax_code():
+    result = inspect(make_msg("Mã số thuế công ty: 0123456789-001"))
+    assert result.action == "REDACT"
+
+def test_redact_bank_account():
+    result = inspect(make_msg("Số tài khoản ngân hàng Vietcombank: 1234567890"))
+    assert result.action == "REDACT"
+
+def test_redact_license_plate():
+    result = inspect(make_msg("Biển số xe của tôi là 51A-123.45"))
+    assert result.action == "REDACT"

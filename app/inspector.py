@@ -6,9 +6,18 @@ from presidio_anonymizer import AnonymizerEngine
 from app.models import Message, InspectionResult
 from app.injection_detector import detect_injection, InjectionResult
 from app.policy_engine import check_policy
+from app.vi_recognizer import build_vi_recognizers
 
-# Khởi tạo 1 lần khi server start (nặng, không khởi tạo mỗi request)
-analyzer = AnalyzerEngine()
+from presidio_analyzer import AnalyzerEngine, RecognizerRegistry
+
+# Khởi tạo registry và thêm VI recognizers
+registry = RecognizerRegistry()
+registry.load_predefined_recognizers()
+
+for recognizer in build_vi_recognizers():
+    registry.add_recognizer(recognizer)
+
+analyzer = AnalyzerEngine(registry=registry)
 anonymizer = AnonymizerEngine()
 
 # -------- Regex patterns --------
@@ -44,7 +53,7 @@ def _presidio_scan(text: str) -> List[dict]:
     """Quét text bằng Presidio NLP."""
     results = analyzer.analyze(
         text=text,
-        entities=["EMAIL_ADDRESS", "PHONE_NUMBER"],
+        entities=["EMAIL_ADDRESS", "PHONE_NUMBER", "VN_CCCD", "VN_TAX_CODE", "VN_LICENSE_PLATE", "VN_BANK_ACCOUNT", "VN_PERSON_NAME", ],
         language="en"
     )
     findings = []
@@ -60,7 +69,7 @@ def _redact_text(text: str) -> str:
     """Mask PII trong text bằng Presidio."""
     results = analyzer.analyze(
         text=text,
-        entities=["EMAIL_ADDRESS", "PHONE_NUMBER"],
+        entities=["EMAIL_ADDRESS", "PHONE_NUMBER", "VN_CCCD", "VN_TAX_CODE", "VN_LICENSE_PLATE", "VN_BANK_ACCOUNT", "VN_PERSON_NAME", ],
         language="en"
     )
     if not results:

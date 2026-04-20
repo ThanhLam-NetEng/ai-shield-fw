@@ -192,6 +192,18 @@ pytest tests/test_proxy.py -v
 # 21 passed in 3.38s
 ```
 
+## Future Work
+
+| #   | Hướng phát triển                                                     | Lý do                                                              |
+| --- | -------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 1   | **High Availability** — AWS ECS Fargate + ALB                        | Loại bỏ single point of failure của EC2 đơn                        |
+| 2   | **Semantic Injection Detection** — LLM-Guard / fine-tuned DistilBERT | Pattern matching hiện tại bypass được bằng Base64, encoding tricks |
+| 3   | **Vietnamese NLP Model** — underthesea / PhoBERT NER                 | Presidio `en_core_web_lg` không hiểu ngữ cảnh tiếng Việt           |
+| 4   | **Encoded Content Detection** — entropy scoring                      | Phát hiện file zip/source code encode Base64 gửi qua API           |
+| 5   | **OAuth2 / JWT per-org Authentication**                              | API key đơn giản chưa đủ cho multi-tenant production               |
+| 6   | **Redis-backed Rate Limiting**                                       | Kiểm soát số request per user, chống abuse                         |
+| 7   | **Dashboard nâng cao** — timeline chart, CSV export, alert threshold | Hỗ trợ Security Operations Center (SOC) monitoring                 |
+
 ## Limitations
 
 - Không cover trường hợp nhân viên vào trực tiếp ChatGPT/Gemini web — đó là bài toán network-level DLP cần SSL inspection trên NGFW
